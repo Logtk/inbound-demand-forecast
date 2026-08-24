@@ -1,0 +1,10 @@
+.env
+logs/
+archive/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# 生成物: サンプル小片(*_sample.xlsx)以外はコミットしない
+data/synthetic/*.xlsx
+!data/synthetic/*_sample.xlsx
