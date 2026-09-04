@@ -36,7 +36,11 @@ def _style_sheet(worksheet, df: pd.DataFrame) -> None:
     worksheet.freeze_panes = "A2"
 
     for i, col in enumerate(df.columns, start=1):
-        max_len = max(len(str(col)), df[col].astype(str).map(len).max() if len(df) else 0)
+        # Series.astype(str).map(len) はpandasのバージョン・文字列dtypeバックエンド
+        # (numpy object vs pyarrow-backed string)によって挙動が変わり得るため、
+        # 素のPythonループでlen(str(v))を取ることでバックエンド差異を回避する。
+        body_max = max((len(str(v)) for v in df[col]), default=0)
+        max_len = max(len(str(col)), body_max)
         worksheet.column_dimensions[get_column_letter(i)].width = min(max_len + 2, 24)
 
 
